@@ -10,4 +10,5 @@ public class HogwartsartifactsonlineApplication {
 		SpringApplication.run(HogwartsartifactsonlineApplication.class, args);
 	}
 
+
 }
