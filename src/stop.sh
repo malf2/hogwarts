@@ -1,23 +1,26 @@
 #!/bin/bash
-set -euo pipefail
+set -euo pipefail  # Exit on error, undefined vars, or failed pipeline
 
-# === CONFIGURATION ===
-APP_NAME=${APP_NAME:-"my-spark-app"}   # Can be overridden by environment
-YARN_CMD=${YARN_CMD:-"yarn"}           # In case your yarn binary is in a custom path
+# Default values
+APP_NAME=${APP_NAME:-"my-spark-app"}   # Spark app name to stop
+YARN_CMD=${YARN_CMD:-"yarn"}           # Yarn command path
 
-# === FUNCTIONS ===
+# Function to get the YARN app ID based on app name
 get_app_id() {
   $YARN_CMD application -list 2>/dev/null | grep "$APP_NAME" | awk '{print $1}' | head -n 1
 }
 
-# === MAIN LOGIC ===
+# Check if an app with the given name is running
+echo "🔍 Checking for running Spark application with name: '$APP_NAME'..."
 APP_ID=$(get_app_id)
 
+# Exit successfully if no running app is found
 if [[ -z "$APP_ID" ]]; then
   echo "✅ No running instance of '$APP_NAME' found."
   exit 0
 fi
 
+# Kill the running YARN app
 echo "⚙️  Found running app: $APP_ID (name: $APP_NAME)"
 echo "🛑 Attempting to kill it..."
 
