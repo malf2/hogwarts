@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Data Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 2em auto;
+      padding: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.3em;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 0.6em 1.2em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>User Data Form</h2>
+
+  <form id="userForm">
+    <label>
+      Name:
+      <input type="text" name="name" required />
+    </label>
+
+    <label>
+      Email:
+      <input type="email" name="email" required />
+    </label>
+
+    <label>
+      Age:
+      <input type="number" name="age" min="0" />
+    </label>
+
+    <label>
+      Favorite color:
+      <select name="color">
+        <option value="">-- Choose one --</option>
+        <option>Red</option>
+        <option>Blue</option>
+        <option>Green</option>
+        <option>Yellow</option>
+      </select>
+    </label>
+
+    <label>
+      Comments:
+      <textarea name="comments" rows="3"></textarea>
+    </label>
+
+    <button type="button" id="exportBtn">Export JSON</button>
+  </form>
+
+  <script>
+    document.getElementById('exportBtn').addEventListener('click', function () {
+      const form = document.getElementById('userForm');
+      const data = {};
+
+      // Collect form data
+      for (let element of form.elements) {
+        if (element.name) {
+          data[element.name] = element.value;
+        }
+      }
+
+      // Convert to JSON
+      const jsonStr = JSON.stringify(data, null, 2);
+
+      // Create a downloadable file
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'form-data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
